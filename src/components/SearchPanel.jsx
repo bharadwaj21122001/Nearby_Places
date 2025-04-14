@@ -23,6 +23,20 @@ const categoryToGeoapify = {
   'Grocery Store/ Super Market': 'commercial.supermarket'
 };
 
+// Haversine formula
+const calculateDistance = (lat1, lon1, lat2, lon2) => {
+  const toRad = (value) => (value * Math.PI) / 180;
+  const R = 6371; // Radius of Earth in km
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+    Math.sin(dLon / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+};
+
 const SearchPanel = ({ onPlaceChange, setResults }) => {
   const [city, setCity] = useState('');
   const [area, setArea] = useState('');
@@ -49,7 +63,7 @@ const SearchPanel = ({ onPlaceChange, setResults }) => {
 
   const fetchNearbyPlaces = async (lat, lon, category) => {
     const catKey = categoryToGeoapify[category];
-    const placeUrl = `https://api.geoapify.com/v2/places?categories=${catKey}&filter=circle:${lon},${lat},5000&limit=20&apiKey=4b28120fb4e44015a35cdfa05fa0432d`;
+    const placeUrl = `https://api.geoapify.com/v2/places?categories=${catKey}&filter=circle:${lon},${lat},5000&limit=50&apiKey=4b28120fb4e44015a35cdfa05fa0432d`;
 
     const response = await axios.get(placeUrl);
     return response.data.features;
@@ -65,9 +79,18 @@ const SearchPanel = ({ onPlaceChange, setResults }) => {
 
     try {
       const coords = await fetchCoordinates(fullLocation);
-      onPlaceChange(coords);
+      onPlaceChange(coords); // updates mapCenter in App.jsx
+
       const places = await fetchNearbyPlaces(coords[0], coords[1], selectedCategory);
-      setResults(places);
+
+      // Filter results to include only places within 5 km using Haversine
+      const filteredPlaces = places.filter((place) => {
+        const [lon, lat] = place.geometry.coordinates;
+        const distance = calculateDistance(coords[0], coords[1], lat, lon);
+        return distance <= 5;
+      });
+
+      setResults(filteredPlaces);
     } catch (error) {
       console.error('Search error:', error);
       alert('Could not find location or places. Please check your input.');

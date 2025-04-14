@@ -1,3 +1,4 @@
+// App.jsx
 import React, { useState } from 'react';
 import SearchPanel from './components/SearchPanel';
 import MapView from './components/MapView';
@@ -8,10 +9,10 @@ function App() {
   const [mapCenter, setMapCenter] = useState(null);
   const [results, setResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState(null); // 👈 NEW
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
   const handlePlaceChange = (coords) => {
-    setMapCenter(coords);
+    setMapCenter({ lat: coords[0], lon: coords[1] });
     setShowResults(true);
   };
 
@@ -19,7 +20,7 @@ function App() {
     setShowResults(false);
     setResults([]);
     setMapCenter(null);
-    setHoveredIndex(null); // 👈 RESET ON BACK
+    setHoveredIndex(null);
   };
 
   return (
@@ -37,13 +38,14 @@ function App() {
             <MapView
               place={mapCenter}
               results={results}
-              hoveredIndex={hoveredIndex} // 👈 Pass it to MapView
+              hoveredIndex={hoveredIndex}
             />
             <div className="places-wrapper">
               <PlaceList
                 results={results}
-                onHover={(index) => setHoveredIndex(index)} // 👈 On hover
-                onLeave={() => setHoveredIndex(null)}       // 👈 On leave
+                onHover={(index) => setHoveredIndex(index)}
+                onLeave={() => setHoveredIndex(null)}
+                userCoords={mapCenter}
               />
             </div>
           </div>
