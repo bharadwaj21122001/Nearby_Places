@@ -1,0 +1,56 @@
+/* App.css */
+
+.app-container {
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  font-family: Arial, sans-serif;
+}
+
+.search-container-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.map-and-list {
+  display: flex;
+  height: 90vh;
+  position: relative;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.places-wrapper {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 30%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 20px;
+  background: #f3f3f3;
+  border-left: 1px solid #ccc;
+  position: relative;
+}
+
+.back-button {
+  padding: 10px 16px;
+  font-size: 16px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  position: absolute;
+  bottom: 10px;
+  left: 80%;
+  transform: translateX(-50%);
+  z-index: 999;
+}
+
+.back-button:hover {
+  background-color: #555;
+}

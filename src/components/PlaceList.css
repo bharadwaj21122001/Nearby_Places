@@ -1,0 +1,34 @@
+.place-list-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100vh;
+    background-color: #fafafa;
+    padding: 1rem;
+    overflow-y: auto;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 5;
+    font-family: Arial, sans-serif;
+  }
+  
+  .place-list-container h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .place-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .place-card {
+    background-color: #fff;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }  
