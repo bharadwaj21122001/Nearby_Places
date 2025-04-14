@@ -1,5 +1,3 @@
-// App.jsx
-
 import React, { useState } from 'react';
 import SearchPanel from './components/SearchPanel';
 import MapView from './components/MapView';
@@ -10,6 +8,7 @@ function App() {
   const [mapCenter, setMapCenter] = useState(null);
   const [results, setResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState(null); // 👈 NEW
 
   const handlePlaceChange = (coords) => {
     setMapCenter(coords);
@@ -20,6 +19,7 @@ function App() {
     setShowResults(false);
     setResults([]);
     setMapCenter(null);
+    setHoveredIndex(null); // 👈 RESET ON BACK
   };
 
   return (
@@ -34,12 +34,19 @@ function App() {
       ) : (
         <>
           <div className="map-and-list">
-            <MapView place={mapCenter} results={results} />
+            <MapView
+              place={mapCenter}
+              results={results}
+              hoveredIndex={hoveredIndex} // 👈 Pass it to MapView
+            />
             <div className="places-wrapper">
-              <PlaceList results={results} />
+              <PlaceList
+                results={results}
+                onHover={(index) => setHoveredIndex(index)} // 👈 On hover
+                onLeave={() => setHoveredIndex(null)}       // 👈 On leave
+              />
             </div>
           </div>
-          {/* Back button at bottom center of the screen */}
           <button className="back-button" onClick={handleBack}>Back</button>
         </>
       )}

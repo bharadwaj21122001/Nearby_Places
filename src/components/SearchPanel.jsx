@@ -3,26 +3,27 @@ import axios from 'axios';
 import './SearchPanel.css';
 
 const categories = [
-  'restaurant',
-  'medical',
-  'hospital',
-  'petrol_station',
-  'school',
-  'college'
+  'Select Category',
+  'Restaurant',
+  'Medical',
+  'Hospital',
+  'Fuel',
+  'School',
+  'College',
+  'Grocery Store/ Super Market'
 ];
 
 const categoryToGeoapify = {
-  restaurant: 'catering.restaurant',
-  medical: 'healthcare.pharmacy',
-  hospital: 'healthcare.hospital',
-  petrol_station: 'service.vehicle',
-  school: 'education.school',
-  college: 'education.college'
+  Restaurant: 'catering.restaurant',
+  Medical: 'healthcare.pharmacy',
+  Hospital: 'healthcare.hospital',
+  Fuel: 'service.vehicle',
+  School: 'education.school',
+  College: 'education.college',
+  'Grocery Store/ Super Market': 'commercial.supermarket'
 };
 
 const SearchPanel = ({ onPlaceChange, setResults }) => {
-  const [country, setCountry] = useState('');
-  const [state, setState] = useState('');
   const [city, setCity] = useState('');
   const [area, setArea] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
@@ -55,12 +56,12 @@ const SearchPanel = ({ onPlaceChange, setResults }) => {
   };
 
   const handleSearch = async () => {
-    if (!country || !state || !city || !area) {
-      alert('Please fill all fields: Country, State, City, Area');
+    if (!city || !area || selectedCategory === 'Select Category') {
+      alert('Please enter City, Area, and select a valid Category.');
       return;
     }
 
-    const fullLocation = `${area}, ${city}, ${state}, ${country}`;
+    const fullLocation = `${area}, ${city}`;
 
     try {
       const coords = await fetchCoordinates(fullLocation);
@@ -74,50 +75,42 @@ const SearchPanel = ({ onPlaceChange, setResults }) => {
   };
 
   return (
-    <div className="search-panel">
-      <h3 className="search-title">Search Nearby Places</h3>
+    <div className="search-wrapper">
+      <div className="glass-container">
+        <h1>🌍 Find Places Around You</h1>
+        <p>Enter your City and Area to discover what's nearby!</p>
 
-      <div className="input-group">
-        <input
-          className="input-field"
-          placeholder="Country"
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-        />
-        <input
-          className="input-field"
-          placeholder="State"
-          value={state}
-          onChange={(e) => setState(e.target.value)}
-        />
-        <input
-          className="input-field"
-          placeholder="City"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-        />
-        <input
-          className="input-field"
-          placeholder="Area"
-          value={area}
-          onChange={(e) => setArea(e.target.value)}
-        />
-      </div>
+        <div className="input-group">
+          <input
+            className="input-field"
+            placeholder="City"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+          />
+          <input
+            className="input-field"
+            placeholder="Area"
+            value={area}
+            onChange={(e) => setArea(e.target.value)}
+          />
+        </div>
 
-      <div className="select-group">
-        <label className="select-label">Category:</label>
         <select
           className="select-field"
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
         >
           {categories.map((cat) => (
-            <option key={cat} value={cat}>{cat}</option>
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
           ))}
         </select>
-      </div>
 
-      <button className="search-button" onClick={handleSearch}>Search</button>
+        <button className="search-button" onClick={handleSearch}>
+          🔍 Search
+        </button>
+      </div>
     </div>
   );
 };

@@ -1,68 +1,71 @@
-/* SearchPanel.css */
+.search-wrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to right, #8ec5fc, #e0c3fc);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-.search-panel {
-    width: 25%;
-    padding: 2rem;
-    background-color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .search-title {
-    margin-bottom: 1rem;
-    color: #333;
-    font-size: 1.3rem;
-    font-weight: bold;
-  }
-  
-  .input-group {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 0.75rem;
-  }
-  
-  .input-field {
-    flex: 1 1 calc(50% - 0.7rem);
-    min-width: 120px;
-    max-width: 24%;
-    padding: 0.6rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    box-sizing: border-box;
-  }
-  
-  .select-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .select-label {
-    font-weight: 500;
-    font-size: 0.95rem;
-  }
-  
-  .select-field {
-    padding: 0.6rem;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 0.95rem;
-  }
-  
-  .search-button {
-    margin-top: 1rem;
-    padding: 0.75rem;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 1rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  
+.glass-container {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 2.5rem;
+  width: 400px;
+  max-width: 90%;
+  color: #333;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.glass-container h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.glass-container p {
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+  color: #444;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.input-field {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+}
+
+.select-field {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.search-button {
+  background-color: #4caf50;
+  border: none;
+  padding: 0.85rem 1.5rem;
+  color: white;
+  font-size: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #45a049;
+}
