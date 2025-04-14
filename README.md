@@ -4,7 +4,16 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-In the project directory, you can run:
+Before you start the project, check the dependencies are istalled are not . If not, run the following command in your terminal:
+
+### `npm install`
+
+For this project there are other dependencies that are not included in the default installation of create-react-app. You can install them by running the following command
+
+### `npm install axios leaflet react-leaflet`
+### `npm install axios`
+
+In the project directory, and in the project terminal, you can run:
 
 ### `npm start`
 
