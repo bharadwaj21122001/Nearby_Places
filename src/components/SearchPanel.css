@@ -1,3 +1,5 @@
+/* SearchPanel.css */
+
 .search-wrapper {
   height: 100vh;
   display: flex;
@@ -9,63 +11,81 @@
 
 .glass-container {
   background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 20px;
-  padding: 2.5rem;
-  width: 400px;
-  max-width: 90%;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-radius: 25px;
+  padding: 3rem;
+  width: 450px;
+  max-width: 95%;
   color: #333;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   text-align: center;
 }
 
 .glass-container h1 {
-  font-size: 1.8rem;
-  margin-bottom: 0.5rem;
+  font-size: 2rem;
+  margin-bottom: 0.8rem;
+  color: #222;
 }
 
 .glass-container p {
-  font-size: 0.95rem;
+  font-size: 1rem;
   margin-bottom: 2rem;
-  color: #444;
+  color: #333;
 }
 
 .input-group {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.2rem;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.input-field {
-  padding: 0.75rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 10px;
+.input-field,
+.select-field {
+  padding: 1rem 1.25rem;
+  font-size: 1.1rem;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  color: #111;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.input-field::placeholder,
+.select-field::placeholder {
+  color: #555;
+  font-weight: 400;
+}
+
+.input-field:focus,
+.select-field:focus {
+  border: 1px solid #4caf50;
   outline: none;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
 }
 
 .select-field {
-  padding: 0.75rem;
-  font-size: 1rem;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  margin-bottom: 1.5rem;
-  width: 100%;
+  cursor: pointer;
 }
 
 .search-button {
   background-color: #4caf50;
   border: none;
-  padding: 0.85rem 1.5rem;
+  padding: 1rem 2rem;
   color: white;
-  font-size: 1rem;
-  border-radius: 10px;
+  font-size: 1.1rem;
+  border-radius: 14px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: background-color 0.3s ease, transform 0.2s;
 }
 
 .search-button:hover {
-  background-color: #45a049;
+  background-color: #3e8e41;
+  transform: scale(1.03);
 }
