@@ -1,6 +1,11 @@
 // src/components/AuthForm.jsx
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  fetchSignInMethodsForEmail,
+} from 'firebase/auth';
 import { auth } from '../firebase';
 import './AuthForm.css';
 
@@ -19,7 +24,36 @@ function AuthForm({ onLogin }) {
         : await createUserWithEmailAndPassword(auth, email, password);
       onLogin(userCredential.user);
     } catch (err) {
-      setError(err.message);
+      if (err.code === 'auth/user-not-found') {
+        setError('User not found. Please sign up first.');
+      } else if (err.code === 'auth/wrong-password') {
+        setError('Incorrect password. Try again.');
+      } else if (err.code === 'auth/email-already-in-use') {
+        setError('Email already in use. Try logging in.');
+      } else {
+        setError(err.message);
+      }
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      setError('Please enter your email to reset password.');
+      return;
+    }
+
+    setError('');
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setError('Password reset email sent. Please check your inbox.');
+    } catch (err) {
+      if (err.code === 'auth/user-not-found') {
+        setError('User not registered. Please sign up first.');
+      } else if (err.code === 'auth/invalid-email') {
+        setError('Please enter a valid email address.');
+      } else {
+        setError('Failed to send reset email. Try again later.');
+      }
     }
   };
 
@@ -43,6 +77,11 @@ function AuthForm({ onLogin }) {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          {isLogin && (
+            <p className="forgot-password-link" onClick={handleForgotPassword}>
+              Forgot Password?
+            </p>
+          )}
           <button type="submit">{isLogin ? 'Login' : 'Sign Up'}</button>
         </form>
         <p className="toggle-link" onClick={() => setIsLogin(!isLogin)}>
