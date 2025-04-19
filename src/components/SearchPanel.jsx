@@ -1,31 +1,34 @@
-// src/components/SearchPanel.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { db } from '../firebase';
 import { collection, addDoc, query, where, getDocs } from 'firebase/firestore';
+import { ReactComponent as SearchIcon } from '../assets/search.svg';
+import { ReactComponent as LocationIcon } from '../assets/location.svg';
+import { ReactComponent as ClockIcon } from '../assets/clock.svg';
+import { ReactComponent as CategoryIcon } from '../assets/category.svg';
 import './SearchPanel.css';
 
-// ─── Your Geoapify API key ─────────────────────────────────────────────────────
 const GEOAPIFY_API_KEY = '4b28120fb4e44015a35cdfa05fa0432d';
 
 const categories = [
-  'Select Category',
-  'Restaurant',
-  'Medical',
-  'Hospital',
-  'Fuel',
-  'School',
-  'College',
-  'Grocery Store/ Super Market'
+  { value: '', label: 'Select Category', icon: '📋' },
+  { value: 'Restaurant', label: 'Restaurant', icon: '🍽️' },
+  { value: 'Medical', label: 'Medical', icon: '💊' },
+  { value: 'Hospital', label: 'Hospital', icon: '🏥' },
+  { value: 'Fuel', label: 'Fuel Station', icon: '⛽' },
+  { value: 'School', label: 'School', icon: '🏫' },
+  { value: 'College', label: 'College', icon: '🎓' },
+  { value: 'Grocery', label: 'Grocery Store', icon: '🛒' }
 ];
+
 const categoryToGeoapify = {
   Restaurant: 'catering.restaurant',
   Medical: 'healthcare.pharmacy',
   Hospital: 'healthcare.hospital',
-  Fuel: 'service.vehicle',
+  Fuel: 'service.vehicle.fuel',
   School: 'education.school',
   College: 'education.college',
-  'Grocery Store/ Super Market': 'commercial.supermarket'
+  Grocery: 'commercial.supermarket'
 };
 
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -41,8 +44,10 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
 export default function SearchPanel({ user, onPlaceChange, setResults }) {
   const [city, setCity] = useState('');
   const [area, setArea] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [history, setHistory] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const fetchHistory = async () => {
     const q = query(collection(db, 'searchHistory'), where('uid', '==', user.uid));
@@ -51,7 +56,9 @@ export default function SearchPanel({ user, onPlaceChange, setResults }) {
     setHistory(data.sort((a, b) => b.timestamp.toMillis() - a.timestamp.toMillis()));
   };
 
-  useEffect(() => { if (user) fetchHistory(); }, [user]);
+  useEffect(() => { 
+    if (user) fetchHistory(); 
+  }, [user]);
 
   const fetchCoordinates = async location => {
     const res = await axios.get('https://api.geoapify.com/v1/geocode/search', {
@@ -76,10 +83,14 @@ export default function SearchPanel({ user, onPlaceChange, setResults }) {
   };
 
   const handleSearch = async () => {
-    if (!city || !area || selectedCategory === categories[0]) {
-      alert('Please enter City, Area & select a Category');
+    if (!city || !area || !selectedCategory) {
+      setError('Please enter City, Area & select a Category');
       return;
     }
+    
+    setError('');
+    setIsLoading(true);
+    
     const location = `${area}, ${city}`;
     try {
       const coords = await fetchCoordinates(location);
@@ -88,8 +99,10 @@ export default function SearchPanel({ user, onPlaceChange, setResults }) {
         const [lon, lat] = p.geometry.coordinates;
         return calculateDistance(coords[0], coords[1], lat, lon) <= 5;
       });
+      
       onPlaceChange(coords);
       setResults(filtered);
+      
       await addDoc(collection(db, 'searchHistory'), {
         uid: user.uid,
         city,
@@ -100,33 +113,141 @@ export default function SearchPanel({ user, onPlaceChange, setResults }) {
       fetchHistory();
     } catch (err) {
       console.error(err);
-      if (err.response?.status === 401) {
-        alert('Unauthorized: check your Geoapify API key');
-      } else {
-        alert('Search failed. See console for details.');
-      }
+      setError(err.response?.status === 401 
+        ? 'API Error: Check your Geoapify key' 
+        : 'Search failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleHistoryClick = async (historyItem) => {
+    setCity(historyItem.city);
+    setArea(historyItem.area);
+    setSelectedCategory(historyItem.category);
+    
+    try {
+      setIsLoading(true);
+      const location = `${historyItem.area}, ${historyItem.city}`;
+      const coords = await fetchCoordinates(location);
+      const places = await fetchNearbyPlaces(coords[0], coords[1], historyItem.category);
+      const filtered = places.filter(p => {
+        const [lon, lat] = p.geometry.coordinates;
+        return calculateDistance(coords[0], coords[1], lat, lon) <= 5;
+      });
+      
+      onPlaceChange(coords);
+      setResults(filtered);
+      
+      await addDoc(collection(db, 'searchHistory'), {
+        uid: user.uid,
+        city: historyItem.city,
+        area: historyItem.area,
+        category: historyItem.category,
+        timestamp: new Date()
+      });
+      fetchHistory();
+    } catch (err) {
+      console.error(err);
+      setError('Failed to load previous search. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="search-wrapper">
-      <div className="glass-container">
-        <h1>🌍 Find Places Around You</h1>
-        <div className="input-group">
-          <input placeholder="City" value={city} onChange={e => setCity(e.target.value)} />
-          <input placeholder="Area" value={area} onChange={e => setArea(e.target.value)} />
+    <div className="search-panel">
+      <div className="search-card">
+        <div className="search-header">
+          <h1>Discover Places Around You</h1>
+          <p>Find nearby locations based on your search criteria</p>
         </div>
-        <select value={selectedCategory} onChange={e => setSelectedCategory(e.target.value)}>
-          {categories.map(c => <option key={c} value={c}>{c}</option>)}
-        </select>
-        <button onClick={handleSearch}>🔍 Search</button>
-        <div className="history">
-          <h3>Search History</h3>
-          <ul>
-            {history.map(h => (
-              <li key={h.id}>{h.area}, {h.city} — {h.category}</li>
-            ))}
-          </ul>
+
+        <div className="search-form">
+          {error && <div className="error-message">{error}</div>}
+          
+          <div className="input-group">
+            <LocationIcon className="input-icon" />
+            <input
+              type="text"
+              placeholder="City"
+              value={city}
+              onChange={e => setCity(e.target.value)}
+              className="input-field"
+            />
+          </div>
+          
+          <div className="input-group">
+            <LocationIcon className="input-icon" />
+            <input
+              type="text"
+              placeholder="Area/Neighborhood"
+              value={area}
+              onChange={e => setArea(e.target.value)}
+              className="input-field"
+            />
+          </div>
+          
+          <div className="input-group">
+            <CategoryIcon className="input-icon" />
+            <select
+              value={selectedCategory}
+              onChange={e => setSelectedCategory(e.target.value)}
+              className="select-field"
+            >
+              {categories.map(c => (
+                <option key={c.value} value={c.value}>
+                  {c.icon} {c.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <button 
+            onClick={handleSearch}
+            className="search-button"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <div className="spinner"></div>
+            ) : (
+              <>
+                <SearchIcon className="search-icon" />
+                <span>Search Places</span>
+              </>
+            )}
+          </button>
+        </div>
+
+        <div className="search-history">
+          <div className="history-header">
+            <ClockIcon className="history-icon" />
+            <h3>Recent Searches</h3>
+          </div>
+          
+          {history.length === 0 ? (
+            <p className="no-history">No search history yet</p>
+          ) : (
+            <ul className="history-list">
+              {history.slice(0, 5).map(h => (
+                <li 
+                  key={h.id} 
+                  onClick={() => handleHistoryClick(h)}
+                  className={`history-item ${isLoading ? 'loading' : ''}`}
+                >
+                  <span className="history-category">
+                    {categories.find(c => c.value === h.category)?.icon || '📌'}
+                  </span>
+                  <div className="history-details">
+                    <span className="history-location">{h.area}, {h.city}</span>
+                    <span className="history-category-label">
+                      {categories.find(c => c.value === h.category)?.label || h.category}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </div>
