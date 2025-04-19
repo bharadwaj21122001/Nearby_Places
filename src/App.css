@@ -1,5 +1,3 @@
-/* App.css */
-
 .app-container {
   height: 100vh;
   width: 100vw;
@@ -7,50 +5,93 @@
   font-family: Arial, sans-serif;
 }
 
-.search-container-centered {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+.logout-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 8px 16px;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 1000;
 }
 
-.map-and-list {
+.results-view {
   display: flex;
-  height: 90vh;
-  position: relative;
-  flex-direction: row;
-  justify-content: space-between;
+  height: calc(100vh - 60px);
+  margin-top: 60px;
 }
 
-.places-wrapper {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  width: 30%;
-  max-height: 90vh;
-  overflow-y: auto;
+.map-section {
+  flex: 2;
+  height: 100%;
   padding: 20px;
-  background: #f3f3f3;
-  border-left: 1px solid #ccc;
-  position: relative;
+  background: #f5f5f5;
+}
+
+.places-section {
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  background: white;
+  border-left: 1px solid #e0e0e0;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
 }
 
 .back-button {
-  padding: 10px 16px;
-  font-size: 16px;
-  background-color: #333;
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  background: #3498db;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 20px;
   cursor: pointer;
-  position: absolute;
-  bottom: 10px;
-  left: 80%;
-  transform: translateX(-50%);
-  z-index: 999;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
-.back-button:hover {
-  background-color: #555;
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .results-view {
+    flex-direction: column;
+  }
+  
+  .map-section {
+    flex: 1;
+    height: 60vh;
+    padding: 10px;
+  }
+  
+  .places-section {
+    flex: 1;
+    height: 40vh;
+    border-left: none;
+    border-top: 1px solid #e0e0e0;
+  }
+}
+
+@media (max-width: 768px) {
+  .map-section {
+    height: 50vh;
+  }
+  
+  .places-section {
+    height: 50vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-section {
+    padding: 5px;
+  }
+  
+  .back-button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
 }

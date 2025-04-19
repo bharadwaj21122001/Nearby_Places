@@ -14,7 +14,14 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
   return R * c;
 };
 
-const PlaceList = ({ results, onHover, onLeave, userCoords, selectedPlace }) => {
+const PlacesListComponent = ({ 
+  results, 
+  onHover, 
+  onLeave, 
+  userCoords, 
+  selectedPlace,
+  onPlaceClick
+}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [radius, setRadius] = useState(5);
 
@@ -25,11 +32,6 @@ const PlaceList = ({ results, onHover, onLeave, userCoords, selectedPlace }) => 
                          res.properties.formatted?.toLowerCase().includes(searchTerm.toLowerCase());
     return dist !== null && dist <= radius && matchesSearch;
   });
-
-  const handlePlaceClick = (lat, lon) => {
-    const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`;
-    window.open(mapsUrl, '_blank');
-  };
 
   return (
     <div className="place-list-container">
@@ -100,7 +102,7 @@ const PlaceList = ({ results, onHover, onLeave, userCoords, selectedPlace }) => 
                 className={`place-card ${onHover && 'hoverable'}`}
                 onMouseEnter={() => onHover && onHover(index)}
                 onMouseLeave={onLeave}
-                onClick={() => handlePlaceClick(lat, lon)}
+                onClick={() => onPlaceClick(lat, lon)}
               >
                 <div className="place-number">{index + 1}</div>
                 <div className="place-content">
@@ -120,7 +122,7 @@ const PlaceList = ({ results, onHover, onLeave, userCoords, selectedPlace }) => 
                     className="action-btn"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handlePlaceClick(lat, lon);
+                      onPlaceClick(lat, lon);
                     }}
                   >
                     <svg viewBox="0 0 24 24">
@@ -138,4 +140,4 @@ const PlaceList = ({ results, onHover, onLeave, userCoords, selectedPlace }) => 
   );
 };
 
-export default PlaceList;
+export default PlacesListComponent;

@@ -1,11 +1,10 @@
-// src/App.jsx
 import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from './firebase';
 import AuthForm from './components/AuthForm';
 import SearchPanel from './components/SearchPanel';
-import MapView from './components/MapView';
-import PlaceList from './components/PlaceList';
+import MapComponent from './components/MapView';
+import PlacesListComponent from './components/PlaceList';
 import './App.css';
 
 function App() {
@@ -14,6 +13,8 @@ function App() {
   const [results, setResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [showRoute, setShowRoute] = useState(false);
+  const [routeLayer, setRouteLayer] = useState(null);
 
   // Auth state listener
   useEffect(() => {
@@ -23,26 +24,29 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  // Update map center and show results panel
   const handlePlaceChange = (coords) => {
     setMapCenter({ lat: coords[0], lon: coords[1] });
     setShowResults(true);
   };
 
-  // Back to search panel
   const handleBack = () => {
     setShowResults(false);
     setMapCenter(null);
     setResults([]);
     setHoveredIndex(null);
+    setShowRoute(false);
+    setRouteLayer(null);
   };
 
-  // Logout function
   const handleLogout = () => {
     signOut(auth);
   };
 
-  // If user not logged in
+  const handlePlaceClick = (lat, lon) => {
+    const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`;
+    window.open(mapsUrl, '_blank');
+  };
+
   if (!user) {
     return <AuthForm onLogin={setUser} />;
   }
@@ -60,24 +64,33 @@ function App() {
           setResults={setResults}
         />
       ) : (
-        <>
-          <div className="map-and-list">
-            <MapView
-              place={mapCenter}
+        <div className="results-view">
+          <div className="map-section">
+            <MapComponent
+              place={mapCenter ? [mapCenter.lat, mapCenter.lon] : null}
               results={results}
               hoveredIndex={hoveredIndex}
+              userLocation={mapCenter}
+              showRoute={showRoute}
+              setShowRoute={setShowRoute}
+              routeLayer={routeLayer}
+              setRouteLayer={setRouteLayer}
             />
-            <PlaceList
+          </div>
+          <div className="places-section">
+            <PlacesListComponent
               results={results}
-              onHover={(idx) => setHoveredIndex(idx)}
+              onHover={setHoveredIndex}
               onLeave={() => setHoveredIndex(null)}
               userCoords={mapCenter}
+              selectedPlace={mapCenter ? [mapCenter.lat, mapCenter.lon] : null}
+              onPlaceClick={handlePlaceClick}
             />
           </div>
           <button className="back-button" onClick={handleBack}>
             🔙 Back
           </button>
-        </>
+        </div>
       )}
     </div>
   );

@@ -7,6 +7,26 @@
   align-items: center;
   background: linear-gradient(to right, #8ec5fc, #e0c3fc);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+}
+
+.logout-button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+  background-color: #d32f2f;
 }
 
 .glass-container {
@@ -88,4 +108,47 @@
 .search-button:hover {
   background-color: #3e8e41;
   transform: scale(1.03);
+}
+
+/* Responsive Design */
+
+/* Tablets (≤1024px) */
+@media screen and (max-width: 1024px) {
+  .glass-container {
+    padding: 2.5rem;
+    width: 90%;
+  }
+
+  .glass-container h1 {
+    font-size: 1.8rem;
+  }
+
+  .glass-container p {
+    font-size: 0.95rem;
+  }
+
+  .input-field,
+  .select-field {
+    font-size: 1rem;
+    padding: 0.9rem 1.1rem;
+  }
+
+  .search-button {
+    font-size: 1rem;
+    padding: 0.9rem 1.5rem;
+  }
+}
+
+/* Mobile Devices (≤768px) */
+@media screen and (max-width: 768px) {
+  .search-wrapper {
+    padding: 1rem;
+    height: auto;
+  }
+
+  .glass-container {
+    padding: 2rem;
+    width:
+    /* ::contentReference[oaicite:0]{index=0} */
+  }
 }

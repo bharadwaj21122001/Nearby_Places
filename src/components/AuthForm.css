@@ -78,3 +78,77 @@
     text-decoration: underline;
   }
   
+  /* Responsive Design */
+@media screen and (max-width: 1024px) {
+  .glass-form {
+    padding: 1.8rem;
+    max-width: 360px;
+  }
+
+  .glass-form input,
+  .glass-form button {
+    font-size: 0.95rem;
+    padding: 0.7rem;
+  }
+
+  .glass-form h2 {
+    font-size: 1.8rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .glass-form {
+    max-width: 320px;
+    padding: 1.5rem;
+  }
+
+  .glass-form h2 {
+    font-size: 1.6rem;
+  }
+
+  .glass-form input,
+  .glass-form button {
+    font-size: 0.9rem;
+    padding: 0.65rem;
+  }
+
+  .toggle-link,
+  .forgot-password-link {
+    font-size: 0.85rem;
+  }
+
+  .error-message {
+    font-size: 0.85rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .auth-container {
+    padding: 1rem;
+  }
+
+  .glass-form {
+    max-width: 100%;
+    padding: 1.25rem;
+    border-radius: 16px;
+  }
+
+  .glass-form h2 {
+    font-size: 1.4rem;
+  }
+
+  .glass-form input,
+  .glass-form button {
+    font-size: 0.85rem;
+    padding: 0.6rem;
+  }
+
+  .toggle-link,
+  .forgot-password-link {
+    font-size: 0.8rem;
+  }
+
+  .error-message {
+    font-size: 0.8rem;
+  }
+}

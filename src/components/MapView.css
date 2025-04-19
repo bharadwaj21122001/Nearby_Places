@@ -1,11 +1,10 @@
 .map-wrapper {
-  width: 60%;
-  height: 70vh;
+  width: 100%;
+  height: 100%;
   position: relative;
-  margin: 20px auto;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .styled-map {
@@ -196,4 +195,114 @@
 
 .leaflet-control-zoom a:hover {
   background: #f1f1f1 !important;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1024px) {
+  .map-wrapper {
+    width: 80%;
+    height: 65vh;
+  }
+
+  .popup-content h4 {
+    font-size: 0.95rem;
+  }
+
+  .popup-address,
+  .popup-distance,
+  .route-btn,
+  .directions-btn {
+    font-size: 0.8rem;
+  }
+
+  .control-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .control-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .map-wrapper {
+    width: 90%;
+    height: 60vh;
+    border-radius: 12px;
+  }
+
+  .placeholder-content h3 {
+    font-size: 1.3rem;
+  }
+
+  .placeholder-content p {
+    font-size: 0.9rem;
+  }
+
+  .popup-content h4 {
+    font-size: 0.9rem;
+  }
+
+  .popup-address,
+  .popup-distance {
+    font-size: 0.75rem;
+  }
+
+  .route-btn,
+  .directions-btn {
+    font-size: 0.75rem;
+    padding: 0.4rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .map-wrapper {
+    width: 95%;
+    height: 55vh;
+    border-radius: 10px;
+  }
+
+  .placeholder-content {
+    padding: 1.5rem;
+  }
+
+  .placeholder-content h3 {
+    font-size: 1.1rem;
+  }
+
+  .placeholder-content p {
+    font-size: 0.85rem;
+  }
+
+  .compass-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  .control-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .control-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .popup-content h4 {
+    font-size: 0.85rem;
+  }
+
+  .popup-address,
+  .popup-distance {
+    font-size: 0.7rem;
+  }
+
+  .route-btn,
+  .directions-btn {
+    font-size: 0.7rem;
+    padding: 0.35rem;
+  }
 }

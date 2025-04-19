@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, ZoomControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -15,20 +15,18 @@ const customIcon = (color = 'green', size = [30, 50]) => new L.Icon({
   shadowSize: [size[0], size[1]]
 });
 
-// Dynamic view update
 const ChangeMapView = ({ coords }) => {
   const map = useMap();
-  useEffect(() => {
+  React.useEffect(() => {
     map.setView(coords, 14);
   }, [coords, map]);
   return null;
 };
 
-// Route overlay with hook safety
 const RouteLayer = ({ showRoute, routeLayer }) => {
   const map = useMap();
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (showRoute && routeLayer) {
       routeLayer.addTo(map);
     } else {
@@ -43,19 +41,14 @@ const RouteLayer = ({ showRoute, routeLayer }) => {
   return null;
 };
 
-const MapControls = () => {
+const MapControls = ({ isSatellite, setIsSatellite }) => {
   const map = useMap();
-  const [isSatellite, setIsSatellite] = useState(false);
-
-  const toggleSatellite = () => {
-    setIsSatellite(!isSatellite);
-  };
 
   return (
     <div className="map-controls">
       <button 
         className={`control-btn ${isSatellite ? 'active' : ''}`}
-        onClick={toggleSatellite}
+        onClick={() => setIsSatellite(!isSatellite)}
         title="Toggle Satellite View"
       >
         <svg viewBox="0 0 24 24">
@@ -89,31 +82,28 @@ const MapControls = () => {
           <path d="M19,13H5V11H19V13Z" />
         </svg>
       </button>
-      {isSatellite ? (
-        <TileLayer
-          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-          attribution="Tiles &copy; Esri"
-        />
-      ) : (
-        <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-          attribution='&copy; OpenStreetMap contributors &copy; CARTO'
-        />
-      )}
     </div>
   );
 };
 
-const MapView = ({ place, results, hoveredIndex, userLocation }) => {
-  const [showRoute, setShowRoute] = useState(false);
-  const [routeLayer, setRouteLayer] = useState(null);
+const MapComponent = ({ 
+  place, 
+  results, 
+  hoveredIndex, 
+  userLocation, 
+  showRoute, 
+  setShowRoute,
+  routeLayer,
+  setRouteLayer
+}) => {
+  const [isSatellite, setIsSatellite] = React.useState(false);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (showRoute && place && userLocation) {
       const route = L.polyline([
         [userLocation.lat, userLocation.lon],
-        [place[0], place[1]]
-      ], {color: '#3498db', weight: 4, dashArray: '10, 10'});
+        [place[0], place[1]],
+        {color: '#3498db', weight: 4, dashArray: '10, 10'}]);
 
       setRouteLayer(route);
     } else {
@@ -145,9 +135,21 @@ const MapView = ({ place, results, hoveredIndex, userLocation }) => {
         zoomControl={false}
       >
         <ChangeMapView coords={place} />
-        <MapControls />
+        <MapControls isSatellite={isSatellite} setIsSatellite={setIsSatellite} />
         <ZoomControl position="bottomright" />
         <RouteLayer showRoute={showRoute} routeLayer={routeLayer} />
+
+        {isSatellite ? (
+          <TileLayer
+            url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+            attribution="Tiles &copy; Esri"
+          />
+        ) : (
+          <TileLayer
+            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+            attribution='&copy; OpenStreetMap contributors &copy; CARTO'
+          />
+        )}
 
         {userLocation && (
           <Marker 
@@ -219,4 +221,4 @@ const MapView = ({ place, results, hoveredIndex, userLocation }) => {
   );
 };
 
-export default MapView;
+export default MapComponent;
